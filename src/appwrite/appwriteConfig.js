@@ -139,6 +139,7 @@ export class Service {
         }
     }
 
+
     getFilePreview(fileId) {
         try {
             if (!fileId) {
@@ -149,11 +150,13 @@ export class Service {
                 console.error('getFilePreview: No bucket ID configured');
                 return null;
             }
-            // Use getFileDownload instead of getFilePreview to avoid transformation errors
-            const result = this.bucket.getFileDownload(
+
+            // Use getFileView for direct file access
+            const result = this.bucket.getFileView(
                 config.appwriteBucketId,
                 fileId
             );
+
             return result;
         } catch (error) {
             console.error('getFilePreview error:', error);
