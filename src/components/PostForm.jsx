@@ -56,7 +56,8 @@ export default function PostForm({ post }) {
                     content: data.content,
                     featuredImage: fileId,
                     status: data.status,
-                    userId: userData.$id
+                    userId: userData.$id,
+                    authorName: userData.name
                 })
                 if (dbPost) {
                     navigate(`/post/${dbPost.$id}`)

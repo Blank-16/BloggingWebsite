@@ -1,42 +1,125 @@
-import { Editor } from '@tinymce/tinymce-react';
+import { useEffect, useRef } from 'react';
 import { Controller } from 'react-hook-form';
-import config from '../config/config.js'
+import Quill from 'quill';
+import 'quill/dist/quill.snow.css';
 
 export default function RTE({ name, control, label, defaultValue = "" }) {
-    const apiKey = config.tinyMce
     return (
-        <div className='w-full'>
+        <div className='w-full bg-white text-black'>
             {label && <label className='inline-block mb-1 pl-1'>{label}</label>}
-
             <Controller
                 name={name || "content"}
                 control={control}
-                render={({ field: { onChange } }) => (
-                    <Editor
-                        apiKey={apiKey}
-                        init={{
-                            plugins: [
-                                // Core editing features
-                                'anchor', 'autolink', 'charmap', 'codesample', 'emoticons', 'link', 'lists', 'media', 'searchreplace', 'table', 'visualblocks', 'wordcount',
-                                // Your account includes a free trial of TinyMCE premium features
-                                // Try the most popular premium features until Sep 5, 2025:
-                                'checklist', 'mediaembed', 'casechange', 'formatpainter', 'pageembed', 'a11ychecker', 'tinymcespellchecker', 'permanentpen', 'powerpaste', 'advtable', 'advcode', 'advtemplate', 'ai', 'uploadcare', 'mentions', 'tinycomments', 'tableofcontents', 'footnotes', 'mergetags', 'autocorrect', 'typography', 'inlinecss', 'markdown', 'importword', 'exportword', 'exportpdf'
-                            ],
-                            toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link media table mergetags | addcomment showcomments | spellcheckdialog a11ycheck typography uploadcare | align lineheight | checklist numlist bullist indent outdent | emoticons charmap | removeformat',
-                            tinycomments_mode: 'embedded',
-                            tinycomments_author: 'Author name',
-                            mergetags_list: [
-                                { value: 'First.Name', title: 'First Name' },
-                                { value: 'Email', title: 'Email' },
-                            ],
-                            ai_request: (request, respondWith) => respondWith.string(() => Promise.reject('See docs to implement AI Assistant')),
-                            uploadcare_public_key: 'f62f86cbaef3b174b7d4',
-                        }}
-                        initialValue="Welcome to Website Blogging!"
+                defaultValue={defaultValue}
+                render={({ field: { onChange, value } }) => (
+                    <QuillEditor
+                        value={value || ''}
+                        onChange={onChange}
                     />
                 )}
             />
-
         </div>
     )
+}
+
+function QuillEditor({ value, onChange }) {
+    const containerRef = useRef(null);
+    const quillRef = useRef(null);
+    const onChangeRef = useRef(onChange);
+    const isInitialMount = useRef(true);
+    const initializedRef = useRef(false);
+
+    // Keep onChange ref updated
+    useEffect(() => {
+        onChangeRef.current = onChange;
+    }, [onChange]);
+
+    useEffect(() => {
+        // Prevent double initialization
+        if (initializedRef.current || !containerRef.current) {
+            return;
+        }
+
+        initializedRef.current = true;
+
+        // Clear any existing content
+        containerRef.current.innerHTML = '';
+
+        // Create editor div
+        const editorDiv = document.createElement('div');
+        containerRef.current.appendChild(editorDiv);
+
+        // Initialize Quill
+        const quill = new Quill(editorDiv, {
+            theme: 'snow',
+            placeholder: 'Write your content here...',
+            modules: {
+                toolbar: [
+                    [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+                    [{ 'font': [] }],
+                    [{ 'size': ['small', false, 'large', 'huge'] }],
+                    ['bold', 'italic', 'underline', 'strike'],
+                    [{ 'color': [] }, { 'background': [] }],
+                    [{ 'script': 'sub' }, { 'script': 'super' }],
+                    [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+                    [{ 'indent': '-1' }, { 'indent': '+1' }],
+                    [{ 'align': [] }],
+                    ['blockquote', 'code-block'],
+                    ['link', 'image', 'video'],
+                    ['clean']
+                ]
+            }
+        });
+
+        quillRef.current = quill;
+
+        // Set initial value if provided
+        if (value) {
+            quill.clipboard.dangerouslyPasteHTML(value);
+        }
+
+        // Handle text changes
+        const handleTextChange = () => {
+            const html = quill.root.innerHTML;
+            onChangeRef.current(html);
+        };
+        
+        quill.on('text-change', handleTextChange);
+
+        // Cleanup
+        return () => {
+            if (quillRef.current) {
+                quillRef.current.off('text-change', handleTextChange);
+                quillRef.current = null;
+            }
+            if (containerRef.current) {
+                containerRef.current.innerHTML = '';
+            }
+            initializedRef.current = false;
+        };
+    }, []);
+
+    // Update editor content when value changes externally
+    useEffect(() => {
+        if (!quillRef.current) return;
+
+        // Skip on initial mount since we set the value during initialization
+        if (isInitialMount.current) {
+            isInitialMount.current = false;
+            return;
+        }
+
+        const quill = quillRef.current;
+        const currentContent = quill.root.innerHTML;
+        
+        if (value !== currentContent) {
+            const selection = quill.getSelection();
+            quill.root.innerHTML = value || '';
+            if (selection) {
+                quill.setSelection(selection);
+            }
+        }
+    }, [value]);
+
+    return <div ref={containerRef} className="quill-wrapper" />;
 }

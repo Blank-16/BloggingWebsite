@@ -1,12 +1,22 @@
-# React + Vite
+# Blogging Web
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## [Live Demo](https://blogging-website-five-kappa.vercel.app/)
 
-Currently, two official plugins are available:
+This repository contains the code for the blogging web, a web application where users can create and view blog posts.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Installation
 
-## Expanding the ESLint configuration
+To get started, clone this repository and install the dependencies.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+```bash
+npm install
+```
+
+To run the application, use the following command:
+
+```bash
+npm run dev
+```
+It's blogging website with full features like create, update, delete, search, and view blog posts.
+At it's core it uses React + Vite to power the frontend 
+and for it's backend it uses Appwrite services [appwrite](https://appwrite.io/), for more informaton on appwrite. 

@@ -57,10 +57,15 @@ export default function Post() {
                 </div>
                 <div className="w-full mb-6">
                     <h1 className="text-2xl font-bold">{post.title}</h1>
+                    {post.authorName && (
+                        <p className="text-gray-400 text-sm mt-2">
+                            By: {post.authorName}
+                        </p>
+                    )}
                 </div>
                 <div className="browser-css">
                     {parse(post.content)}
-                    </div>
+                </div>
             </Container>
         </div>
     ) : null;

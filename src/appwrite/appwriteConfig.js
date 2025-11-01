@@ -16,11 +16,7 @@ export class Service {
         this.bucket = new Storage(this.client);
     }
 
-    async getUserName(userId) {
-        // to be added
-    }
-    
-    async createPost({ title, slug, content, featuredImage, status, userId }) {
+    async createPost({ title, slug, content, featuredImage, status, userId, authorName }) {
         try {
             return await this.databases.createDocument(
                 config.appwriteDatabaseId,
@@ -31,7 +27,8 @@ export class Service {
                     content,
                     featuredImage,
                     status,
-                    userId
+                    userId,
+                    authorName
                 }
             )
         } catch (error) {
@@ -39,18 +36,25 @@ export class Service {
         }
     }
 
-    async updatePost({ slug, title, content, featuredImage, status, userId }) {
+    async updatePost({ slug, title, content, featuredImage, status, userId, authorName }) {
         try {
+            const updateData = {
+                title,
+                content,
+                featuredImage,
+                status,
+            };
+            
+            // Only include authorName if provided
+            if (authorName !== undefined) {
+                updateData.authorName = authorName;
+            }
+            
             return await this.databases.updateDocument(
                 config.appwriteDatabaseId,
                 config.appwriteCollectionId,
                 slug,
-                {
-                    title,
-                    content,
-                    featuredImage,
-                    status,
-                }
+                updateData
             )
         } catch (error) {
             console.log("Appwrite service UpdatePost error", error);
