@@ -1,12 +1,9 @@
-import img from '../assets/1751548345_new_загруженное (22).jpg'
 
-function Logo({
-  width = "100px"
-}) {
+function Logo() {
   return (
-  <div style={{ width }}>
-    <img src={img} alt="IMG" style={{ width: "100%", height: "auto", display: "block" }} />
-  </div>
+    <div className="m-auto">
+      <button className={`inline-bock px-6 py-2 rounded-full cursor-pointer`}>Blogging Web</button>
+    </div>
   )
 }
 
