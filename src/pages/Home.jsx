@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { Query } from 'appwrite'
 import appwriteService from '../appwrite/appwriteConfig'
-import {Container , PostCard} from '../components/index'
+import { Container, PostCard } from '../components/index'
 
 function Home() {
     const [posts, setPosts] = useState([])
@@ -29,7 +29,7 @@ function Home() {
 
         fetchPosts()
     }, [status])
-    
+
     if (loading) {
         return (
             <div className='w-full py-8 mt-4 text-center'>
@@ -76,13 +76,15 @@ function Home() {
                         {status ? 'Showing only active posts from your feed' : 'Showing all posts from everyone'}
                     </p>
                 </div>
-                <div className="flex flex-wrap">
-                    {posts.map((post) => (
-                        <div key={post.$id} className="py-2 w-1/4 m-2">
-                            <PostCard {...post} />
-                        </div>
-                    ))}
-                </div>
+                <Container>
+                    <div className='md:flex md:flex-wrap'>
+                        {posts.map((post) => (
+                            <div key={post.$id} className='p-2 sm:w-full lg:w-1/4 md:w-1/2 '>
+                                <PostCard {...post} />
+                            </div>
+                        ))}
+                    </div>
+                </Container>
             </Container>
         </div>
     )
