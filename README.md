@@ -12,6 +12,10 @@ To get started, clone this repository and install the dependencies.
 npm install
 ```
 
+```
+Create your .env file copy the variables used from .env.example and insert your keys.
+```
+
 To run the application, use the following command:
 
 ```bash
