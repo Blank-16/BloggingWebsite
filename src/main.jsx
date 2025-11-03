@@ -13,7 +13,6 @@ import {
   AllPosts,
   EditPost,
   Post,
-  MigratePosts,
 } from '../src/pages/index.js'
 
 const router = createBrowserRouter([
@@ -71,14 +70,6 @@ const router = createBrowserRouter([
       {
         path: '/post/:slug',
         element: <Post />,
-      },
-      {
-        path: '/migrate-posts',
-        element: (
-          <AuthLayout authentication={true}>
-            <MigratePosts />
-          </AuthLayout>
-        ),
       },
     ],
   },

@@ -5,7 +5,6 @@ import AddPost from "./AddPost";
 import AllPosts from "./AllPosts";
 import EditPost from "./EditPost";
 import Post from "./Post";
-import MigratePosts from "./MigratePosts";
 
 export {
     Home,
@@ -15,5 +14,4 @@ export {
     AllPosts,
     EditPost,
     Post,
-    MigratePosts,
 };
